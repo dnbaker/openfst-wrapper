@@ -94,7 +94,7 @@ class BuildExt(build_ext):
         'unix': [],
     }
 
-    if sys.platform == 'darwin':
+    if sys.platform == 'darwin' and 'clang' in os.environ['CXX']:
         c_opts['unix'] += ['-stdlib=libc++', '-mmacosx-version-min=10.7']
 
     def build_extensions(self):

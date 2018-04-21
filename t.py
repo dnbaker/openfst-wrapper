@@ -1,8 +1,10 @@
+import mfst
+from mfst import semirings
+
 print("here")
 
-import mfst
-
 num_weights = 0
+
 
 class MyWeight(mfst.AbstractSemiringWeight):
 
@@ -39,7 +41,7 @@ class MyWeight(mfst.AbstractSemiringWeight):
         num_weights -= 1
 
     def __str__(self):
-        print('calling string')#, type(self), dir(self))
+        print('calling string')  # , type(self), dir(self))
         return 'MyWeight({})'.format(self._value)
 
 MyWeight.zero = MyWeight(0)
@@ -79,7 +81,8 @@ a = None
 vv = None
 gg = None
 
-assert num_weights == 2 # check that everything got deleted (except the zero and 1 static)
+assert num_weights == 2 \
+    # check that everything got deleted (except the zero and 1 static)
 
 
 gg = mfst.FST()
@@ -108,6 +111,7 @@ def build_hc_fst(fst, n=3):
     fst.add_arc(c[-1], final)
     fst.add_arc(h[-1], final)
 
+
 class pathSemiring2(mfst.PythonValueSemiringWeight):
     semiring_properties = 'path'
 
@@ -115,7 +119,6 @@ pathSemiring2.zero = pathSemiring2(0)
 pathSemiring2.one = pathSemiring2(1)
 pathSemiring2.one.zzz = 1
 pathSemiring2.zero.zzz = 1
-
 
 
 hc = mfst.FST(pathSemiring2)
@@ -147,24 +150,25 @@ assert hc.shortest_path().num_states > 0
 
 # check that we can use the other semirings that are defined in
 
-from mfst import semirings
 
 for s in dir(semirings):
-    if s.startswith('_') or s == 'AbstractSemiringWeight' or s == 'BooleanSemiringWeight':
+    if s.startswith('_') or s == 'AbstractSemiringWeight' or \
+            s == 'BooleanSemiringWeight':
         continue
     ss = getattr(semirings, s)
 
     fst = mfst.FST(ss)
     build_hc_fst(fst)
-    fst.determinize()  # just do some operation to check that the semiring seems ok
-
-
+    fst.determinize()
+    # just do some operation to check that the semiring seems ok
 
 
 # tests for the boolean semiring in that we can compose it with something else
-bs = mfst.FST(semirings.BooleanSemiringWeight).create_from_string('test123').push()
+bs = mfst.FST(semirings.BooleanSemiringWeight).create_from_string(
+    'test123').push()
 
-assert mfst.FST().create_from_string('test123').compose(bs).get_unique_output_string() == 'test123'
+assert mfst.FST().create_from_string('test123').compose(
+    bs).get_unique_output_string() == 'test123'
 
 mfst.FST('test')
 
